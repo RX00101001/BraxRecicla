@@ -1,0 +1,54 @@
+# Desactivar listado de directorios
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Servir archivos o directorios existentes directamente
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Si la ruta no tiene barra final y existe como directorio, redirigir a /
+  RewriteCond %{DOCUMENT_ROOT}/$1 -d
+  RewriteRule ^(.*[^/])$ /$1/ [L,R=301]
+
+  # Pagina 404
+  ErrorDocument 404 /404/index.html
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+<IfModule mod_headers.c>
+  # =========================================================================
+  # CABECERAS DE SEGURIDAD INDUSTRIAL (OWASP RECOMMENDATIONS)
+  # =========================================================================
+
+  # 1. Prevenir Clickjacking (impide incrustar el sitio en iframes maliciosos)
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # 2. Prevenir MIME-Type Sniffing
+  Header always set X-Content-Type-Options "nosniff"
+
+  # 3. Forzar HTTPS Estricto (HSTS - 1 año con inclusión de subdominios)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # 4. Proteger Referrer contra fugas de URLs internas
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # 5. Restringir APIs del navegador innecesarias (Permissions Policy)
+  Header always set Permissions-Policy "camera=(), microphone=(), payment=()"
+
+  # 6. Ocultar estrictamente el ERP de motores de búsqueda (Google, Bing)
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+
+  # Prevenir cache vieja de HTML para reflejar cambios de inmediato
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+  </FilesMatch>
+</IfModule>

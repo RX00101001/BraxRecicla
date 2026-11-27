@@ -1,0 +1,101 @@
+{
+  "b2c": [
+    {
+      "tipo": "b2c",
+      "nombre": null,
+      "rut": "CIUDADANO_SUPRESION_LEGAL_21719_75c2d5b19a",
+      "direccion": null,
+      "material": "Botellas de Bebida (PET 1)",
+      "kilosEstimados": 0,
+      "id": "req-404d881c-ecfc-4bb1-985a-672dacee08d4",
+      "fecha": "2026-09-14T19:45:32.506Z",
+      "estado": "Anonimizado (Ley 21.719)"
+    },
+    {
+      "tipo": "b2c",
+      "nombre": null,
+      "rut": "CIUDADANO_SUPRESION_LEGAL_21719_75c2d5b19a",
+      "direccion": null,
+      "material": "Plástico Mixto",
+      "kilosEstimados": 0,
+      "id": "req-98e2b8b8-9da8-48bb-bfaa-53ef6febc3a4",
+      "fecha": "2026-09-14T19:43:17.087Z",
+      "estado": "Anonimizado (Ley 21.719)"
+    },
+    {
+      "id": "req-1",
+      "tipo": "b2c",
+      "nombre": "María González",
+      "rut": "15.234.567-8",
+      "direccion": "Av. Providencia 1234, Santiago",
+      "material": "Botellas de Bebida (PET 1)",
+      "kilosEstimados": 5,
+      "fecha": "2026-09-14T19:37:13.969Z",
+      "estado": "Pendiente"
+    }
+  ],
+  "b2b": [
+    {
+      "tipo": "b2b",
+      "rut": "92.176.000-0",
+      "razonSocial": "o",
+      "email": "aleja.fuentesd@duocuc.cl",
+      "material": "Chatarra Ferrosa",
+      "volumen": 5,
+      "id": "req-ac702a3a-a176-4deb-b00f-e04ab4174d37",
+      "fecha": "2026-09-14T20:02:05.670Z",
+      "estado": "Pendiente"
+    },
+    {
+      "tipo": "b2b",
+      "rut": "92.176.000-0",
+      "razonSocial": "o",
+      "email": "aleja.fuentesd@duocuc.cl",
+      "material": "Chatarra Ferrosa",
+      "volumen": 1,
+      "id": "req-98d54604-b50b-468b-b9bb-4bb85f737e9e",
+      "fecha": "2026-09-14T20:01:48.190Z",
+      "estado": "Pendiente"
+    },
+    {
+      "tipo": "b2b",
+      "rut": "92.176.000-0",
+      "razonSocial": "EMPRESA VERIFICADA POR SII",
+      "material": "Chatarra Ferrosa",
+      "volumen": 1000,
+      "id": "req-019a2a3f-7f16-4e8b-a4f1-a791d38e2a7e",
+      "fecha": "2026-09-14T19:47:10.746Z",
+      "estado": "Pendiente"
+    },
+    {
+      "tipo": "b2b",
+      "rut": "92.176.000-0",
+      "razonSocial": "EMPRESA VERIFICADA POR SII",
+      "material": "Chatarra Ferrosa",
+      "volumen": 10000,
+      "id": "req-496abf5f-c7c2-4239-a6eb-ed8b21ff007b",
+      "fecha": "2026-09-14T19:46:54.387Z",
+      "estado": "Pendiente"
+    },
+    {
+      "tipo": "b2b",
+      "rut": "92.176.000-0",
+      "razonSocial": "EMPRESA VERIFICADA POR SII",
+      "material": "Chatarra Ferrosa",
+      "volumen": 1000,
+      "id": "req-415def02-891d-4ff8-8051-ed2a9513b317",
+      "fecha": "2026-09-14T19:46:25.497Z",
+      "estado": "Pendiente"
+    },
+    {
+      "id": "req-2",
+      "tipo": "b2b",
+      "razonSocial": "ACEROS BRAX S.A.",
+      "rut": "76.000.000-K",
+      "material": "Chatarra Ferrosa",
+      "volumen": 50,
+      "fecha": "2026-09-14T19:37:13.970Z",
+      "estado": "Aprobado"
+    }
+  ]
+}

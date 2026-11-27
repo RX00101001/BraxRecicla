@@ -1,0 +1,617 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #0b0f19; /* Obsidian Black - Modo Noche por defecto */
+  --foreground: #f8fafc;
+  
+  /* BraxRecicla Corporate Colors */
+  --color-brax-primary: #10b981;
+  --color-brax-secondary: #34d399;
+  --color-brax-accent: #059669;
+  --color-brax-dark: #1e293b;
+  --color-brax-light: #334155;
+}
+
+html.light {
+  --background: #f8fafc; /* Slate 50 - Modo Día */
+  --foreground: #0f172a;
+  
+  --color-brax-primary: #047857;
+  --color-brax-secondary: #10b981;
+  --color-brax-accent: #059669;
+  --color-brax-dark: #0f172a;
+  --color-brax-light: #f1f5f9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-brax-primary: var(--color-brax-primary);
+  --color-brax-secondary: var(--color-brax-secondary);
+  --color-brax-accent: var(--color-brax-accent);
+  --color-brax-dark: var(--color-brax-dark);
+  --color-brax-light: var(--color-brax-light);
+  
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* =========================================================================
+   SISTEMA DE TEMA: MODO NOCHE (DEFAULT & .dark)
+   Garantiza contraste óptimo y legibilidad perfecta en Modo Noche
+   ========================================================================= */
+html.dark,
+html:not(.light) {
+  color-scheme: dark;
+}
+
+html.dark h1:not(button *),
+html.dark h2:not(button *),
+html.dark h3:not(button *),
+html.dark h4:not(button *),
+html:not(.light) h1:not(button *),
+html:not(.light) h2:not(button *),
+html:not(.light) h3:not(button *),
+html:not(.light) h4:not(button *) {
+  color: #f8fafc !important;
+}
+
+html.dark [class*="text-slate-900"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-amber-600"] *),
+html:not(.light) [class*="text-slate-900"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-amber-600"] *) {
+  color: #f8fafc !important;
+}
+
+html.dark [class*="text-slate-800"]:not(button *),
+html:not(.light) [class*="text-slate-800"]:not(button *) {
+  color: #f1f5f9 !important;
+}
+
+html.dark [class*="text-slate-700"]:not(button *),
+html:not(.light) [class*="text-slate-700"]:not(button *) {
+  color: #cbd5e1 !important;
+}
+
+html.dark [class*="text-slate-600"]:not(button *),
+html:not(.light) [class*="text-slate-600"]:not(button *) {
+  color: #94a3b8 !important;
+}
+
+/* Logo BraxRecicla en Modo Noche */
+html.dark aside span.font-extrabold,
+html:not(.light) aside span.font-extrabold {
+  color: #ffffff !important;
+}
+
+/* =========================================================================
+   SISTEMA DE TEMA: MODO CLARO (MODO DÍA) CORPORATIVO DEFINITIVO
+   ========================================================================= */
+
+/* 1. Fondos y Contenedores Generales */
+html.light body,
+html.light main,
+html.light [class*="bg-[#070b14]"],
+html.light [class*="bg-[#0b0f19]"] {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* 2. Barra Lateral (Sidebar) */
+html.light aside,
+html.light [class*="bg-[#0a0f1d]"] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* 3. Tarjetas, Paneles y Módulos Principales (KPIs, Listados y Tablas) */
+html.light [class*="bg-[#1e293b]"],
+html.light [class*="bg-[#0d1424]"],
+html.light [class*="bg-[#0f172a]"],
+html.light [class*="bg-slate-900"],
+html.light [class*="bg-slate-950"],
+html.light [class*="from-[#111c2e]"] {
+  background-image: none !important;
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05) !important;
+}
+
+/* 4. Cabeceras Superiores y Sub-cabeceras */
+html.light header,
+html.light [class*="bg-slate-950/"],
+html.light [class*="bg-[#0c1222]"],
+html.light [class*="bg-[#0f172a]/"],
+html.light [class*="bg-[#0a0f1d]/"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* 5. Sub-tarjetas y cajas internas (ej: Facturación B2B, Costo Flota, items secundarios) */
+html.light [class*="bg-slate-900/60"],
+html.light [class*="bg-slate-900/50"],
+html.light [class*="bg-slate-900/40"],
+html.light [class*="bg-slate-900/80"] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Item activo / seleccionado en Certificados */
+html.light [class*="ring-emerald-500"],
+html.light [class*="bg-slate-800/90"] {
+  background-color: #ecfdf5 !important;
+  border-color: #10b981 !important;
+}
+
+/* 6. Contenedores de Tabs y Botones de Filtro */
+html.light [class*="bg-[#0b0f19]"]:not(main):not(body):not(html) {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* 7. Bordes y Separadores */
+html.light [class*="border-slate-800"],
+html.light [class*="border-slate-700"] {
+  border-color: #e2e8f0 !important;
+}
+
+html.light [class*="divide-slate-800"] {
+  border-color: #f1f5f9 !important;
+}
+
+/* 8. Pista de barras de progreso (fondos que deben ser gris claro para contrastar con la barra de color) */
+html.light .w-full.bg-slate-800,
+html.light [class*="bg-slate-800"].rounded-full {
+  background-color: #e2e8f0 !important;
+}
+
+/* 9. Tipografía y Textos de Alto Contraste en Modo Día */
+html.light h1:not(button *):not(.preserve-dark *):not(.dark-panel *),
+html.light h2:not(button *):not(.preserve-dark *):not(.dark-panel *),
+html.light h3:not(button *):not(.preserve-dark *):not(.dark-panel *),
+html.light h4:not(button *):not(.preserve-dark *):not(.dark-panel *),
+html.light p.text-white:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *),
+html.light span.text-white:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *),
+html.light div.text-white:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *),
+html.light [class*="text-slate-100"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *),
+html.light [class*="text-slate-200"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *) {
+  color: #0f172a !important;
+}
+
+html.light [class*="text-slate-300"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *),
+html.light [class*="text-slate-400"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *) {
+  color: #334155 !important;
+}
+
+html.light [class*="text-slate-500"]:not(button *):not([class*="bg-emerald-600"] *):not([class*="bg-blue-600"] *):not([class*="bg-red-600"] *):not(.preserve-dark *):not(.dark-panel *) {
+  color: #475569 !important;
+}
+
+/* REGLA DE ORO: Solo los botones de acción con fondo saturado conservan texto blanco */
+html.light button[class*="bg-emerald-600"],
+html.light button[class*="bg-emerald-700"],
+html.light button[class*="bg-blue-600"],
+html.light button[class*="bg-blue-700"],
+html.light button[class*="bg-indigo-600"],
+html.light button[class*="bg-teal-600"],
+html.light button[class*="bg-red-600"],
+html.light button[class*="bg-amber-600"],
+html.light button[class*="bg-cyan-600"],
+html.light button[class*="from-emerald-600"],
+html.light a[class*="bg-blue-600"],
+html.light a[class*="bg-emerald-600"],
+html.light button[class*="bg-emerald-600"] *,
+html.light button[class*="bg-emerald-700"] *,
+html.light button[class*="bg-blue-600"] *,
+html.light button[class*="bg-blue-700"] *,
+html.light button[class*="bg-indigo-600"] *,
+html.light button[class*="bg-teal-600"] *,
+html.light button[class*="bg-red-600"] *,
+html.light button[class*="bg-amber-600"] *,
+html.light button[class*="bg-cyan-600"] *,
+html.light button[class*="from-emerald-600"] *,
+html.light a[class*="bg-blue-600"] *,
+html.light a[class*="bg-emerald-600"] * {
+  color: #ffffff !important;
+}
+
+/* Sidebar Activa en Modo Día */
+html.light aside a[class*="bg-emerald-"] {
+  background-color: #d1fae5 !important;
+  border-color: #6ee7b7 !important;
+  color: #065f46 !important;
+  font-weight: 700 !important;
+}
+html.light aside a[class*="bg-emerald-"] * {
+  color: #065f46 !important;
+}
+html.light aside a[class*="bg-blue-"] {
+  background-color: #dbeafe !important;
+  border-color: #93c5fd !important;
+  color: #1e40af !important;
+  font-weight: 700 !important;
+}
+html.light aside a[class*="bg-blue-"] * {
+  color: #1e40af !important;
+}
+html.light aside a[class*="bg-amber-"] {
+  background-color: #fef3c7 !important;
+  border-color: #fcd34d !important;
+  color: #92400e !important;
+  font-weight: 700 !important;
+}
+html.light aside a[class*="bg-amber-"] * {
+  color: #92400e !important;
+}
+
+/* 10. Colores de Estado Adaptados para Modo Día (Alta visibilidad y contraste sobre blanco) */
+html.light .text-emerald-400 {
+  color: #047857 !important; /* Emerald 700 para alto contraste */
+  font-weight: 600;
+}
+
+html.light .text-emerald-300 {
+  color: #065f46 !important; /* Emerald 800 */
+  font-weight: 700;
+}
+
+html.light .text-amber-400 {
+  color: #b45309 !important; /* Amber 700 */
+  font-weight: 700;
+}
+
+html.light .text-amber-300 {
+  color: #92400e !important; /* Amber 800 para insignias como PLANIFICADA */
+  font-weight: 700;
+}
+
+html.light .text-blue-400 {
+  color: #1d4ed8 !important; /* Blue 700 */
+  font-weight: 600;
+}
+
+html.light .text-blue-300 {
+  color: #1e40af !important; /* Blue 800 */
+  font-weight: 700;
+}
+
+html.light .text-cyan-400,
+html.light .text-cyan-300 {
+  color: #0e7490 !important; /* Cyan 700 */
+  font-weight: 600;
+}
+
+html.light .text-teal-400,
+html.light .text-teal-300 {
+  color: #0f766e !important; /* Teal 700 */
+  font-weight: 600;
+}
+
+html.light .text-red-400 {
+  color: #b91c1c !important; /* Red 700 */
+  font-weight: 600;
+}
+
+/* 11. Badges, Píldoras y Etiquetas de Tablas */
+html.light [class*="bg-blue-950"] {
+  background-color: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #1d4ed8 !important;
+}
+
+html.light [class*="bg-emerald-950"] {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+html.light [class*="bg-amber-950"] {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #b45309 !important;
+}
+
+html.light [class*="bg-slate-800"]:not(.w-full):not(.rounded-full) {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+html.light [class*="bg-emerald-500/10"] {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+html.light [class*="bg-amber-500/10"] {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+}
+
+html.light [class*="bg-blue-500/10"] {
+  background-color: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+/* 12. Tablas (Thead & Hover) */
+html.light thead,
+html.light thead tr,
+html.light thead th {
+  background-color: #f8fafc !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+/* 13. Entradas de Texto y Búsqueda */
+html.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]) {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html.light input[type="range"] {
+  background-color: #cbd5e1 !important;
+}
+
+/* 14. Menú de Navegación */
+html.light nav a.text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light nav a.text-slate-400:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* 15. Contenedores Oscuros Protegidos en Modo Día (Cockpits, Terminales y Widgets) */
+html.light .preserve-dark,
+html.light .dark-panel {
+  background-color: #0f172a !important;
+  background-image: none !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.light .preserve-dark *,
+html.light .dark-panel * {
+  color: inherit;
+}
+
+html.light .preserve-dark h1,
+html.light .preserve-dark h2,
+html.light .preserve-dark h3,
+html.light .preserve-dark h4,
+html.light .preserve-dark .text-white,
+html.light .dark-panel h1,
+html.light .dark-panel h2,
+html.light .dark-panel h3,
+html.light .dark-panel h4,
+html.light .dark-panel .text-white {
+  color: #ffffff !important;
+}
+
+html.light .preserve-dark .text-emerald-400,
+html.light .dark-panel .text-emerald-400 {
+  color: #34d399 !important;
+}
+
+html.light .preserve-dark .text-emerald-300,
+html.light .dark-panel .text-emerald-300 {
+  color: #6ee7b7 !important;
+}
+
+html.light .preserve-dark .text-red-400,
+html.light .dark-panel .text-red-400 {
+  color: #f87171 !important;
+}
+
+html.light .preserve-dark .text-cyan-300,
+html.light .dark-panel .text-cyan-300 {
+  color: #67e8f9 !important;
+}
+
+html.light .preserve-dark .text-amber-400,
+html.light .dark-panel .text-amber-400 {
+  color: #fbbf24 !important;
+}
+
+html.light .preserve-dark .text-amber-300,
+html.light .dark-panel .text-amber-300 {
+  color: #fcd34d !important;
+}
+
+html.light .preserve-dark .text-slate-300,
+html.light .dark-panel .text-slate-300 {
+  color: #cbd5e1 !important;
+}
+
+html.light .preserve-dark .text-slate-400,
+html.light .dark-panel .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+html.light .preserve-dark .text-slate-500,
+html.light .dark-panel .text-slate-500 {
+  color: #64748b !important;
+}
+
+html.light .preserve-dark [class*="bg-slate-900"],
+html.light .dark-panel [class*="bg-slate-900"] {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+html.light .preserve-dark [class*="bg-[#0b0f19]"],
+html.light .dark-panel [class*="bg-[#0b0f19]"] {
+  background-color: #0b0f19 !important;
+  border-color: #334155 !important;
+}
+
+html.light .preserve-dark [class*="bg-emerald-950"],
+html.light .dark-panel [class*="bg-emerald-950"] {
+  background-color: rgba(6, 78, 59, 0.7) !important;
+  border-color: #059669 !important;
+}
+
+html.light .preserve-dark [class*="bg-red-950"],
+html.light .dark-panel [class*="bg-red-950"] {
+  background-color: rgba(127, 29, 29, 0.7) !important;
+  border-color: #dc2626 !important;
+}
+
+html.light .preserve-dark [class*="border-slate-800"],
+html.light .dark-panel [class*="border-slate-800"] {
+  border-color: #334155 !important;
+}
+
+html.light [class*="bg-emerald-500/15"] {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+html.light [class*="bg-blue-500/15"] {
+  background-color: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+html.light [class*="bg-amber-500/15"] {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+}
+
+/* 15.1 Badges y Alertas Rojas en Modo Día */
+html.light [class*="bg-red-950"]:not(.preserve-dark *):not(.dark-panel *) {
+  background-color: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+  color: #991b1b !important;
+}
+
+html.light [class*="text-red-300"]:not(.preserve-dark *):not(.dark-panel *) {
+  color: #991b1b !important;
+}
+
+html.light [class*="text-red-400"]:not(.preserve-dark *):not(.dark-panel *) {
+  color: #b91c1c !important;
+}
+
+/* 16. Banner de Optimización TSP (Modo Día Adaptativo) */
+html.light .optimization-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f8fafc 100%) !important;
+  border-color: #86efac !important;
+  box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.12) !important;
+}
+
+html.light .optimization-banner .banner-icon {
+  background-color: #d1fae5 !important;
+  border-color: #6ee7b7 !important;
+  color: #059669 !important;
+}
+
+html.light .optimization-banner .banner-title {
+  color: #065f46 !important;
+}
+
+html.light .optimization-banner .banner-subtitle {
+  color: #334155 !important;
+}
+
+html.light .optimization-banner .banner-badge {
+  background-color: #d1fae5 !important;
+  border-color: #6ee7b7 !important;
+  color: #065f46 !important;
+}
+
+html.light .optimization-banner .banner-grid {
+  border-color: #d1fae5 !important;
+}
+
+html.light .optimization-banner .stat-box {
+  background-color: #ffffff !important;
+  border-color: #a7f3d0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .optimization-banner .stat-label {
+  color: #475569 !important;
+  font-weight: 600;
+}
+
+html.light .optimization-banner .stat-sub {
+  color: #64748b !important;
+}
+
+html.light .optimization-banner .stat-val {
+  font-weight: 800 !important;
+}
+html.light .optimization-banner .stat-val.text-emerald-400 {
+  color: #047857 !important;
+}
+html.light .optimization-banner .stat-val.text-amber-400 {
+  color: #b45309 !important;
+}
+html.light .optimization-banner .stat-val.text-teal-300,
+html.light .optimization-banner .stat-val.text-teal-400 {
+  color: #0f766e !important;
+}
+html.light .optimization-banner .stat-val.text-cyan-300,
+html.light .optimization-banner .stat-val.text-cyan-400 {
+  color: #0369a1 !important;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 15s linear infinite;
+}
+
+@keyframes pulseLed {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+}
+
+.animate-pulse-led {
+  animation: pulseLed 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-certificate, #printable-certificate * {
+    visibility: visible;
+  }
+  #printable-certificate {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    background: white !important;
+    color: black !important;
+  }
+}

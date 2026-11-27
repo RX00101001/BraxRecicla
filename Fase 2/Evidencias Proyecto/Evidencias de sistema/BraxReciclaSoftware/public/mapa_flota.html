@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BraxPanel - Mapa Flota</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f8fafc; }
+    #map { height: 100vh; width: 100vw; }
+    .panel { position: absolute; top: 12px; left: 12px; z-index: 1000; background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(8px); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(51, 65, 85, 0.6); box-shadow: 0 10px 25px rgba(0,0,0,0.5); min-width: 240px; max-width: 290px; font-size: 12px; }
+    h3 { margin: 0 0 4px 0; font-size: 13px; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; background: #065f46; color: #34d399; margin-bottom: 8px; transition: all 0.3s ease; }
+    .stat { display: flex; justify-content: space-between; gap: 10px; padding: 3px 0; border-bottom: 1px solid rgba(30, 41, 59, 0.8); }
+    .stat:last-child { border-bottom: 0; }
+    .stat-label { color: #94a3b8; }
+    .stat-value { font-weight: bold; color: #f1f5f9; text-align: right; font-variant-numeric: tabular-nums; }
+    .pulse-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 0 rgba(16, 185, 129, 0.4); animation: pulse 1.5s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+    /* Control de capas con estilo oscuro */
+    .leaflet-control-layers {
+      background: rgba(15, 23, 42, 0.92) !important;
+      color: #f8fafc !important;
+      border: 1px solid rgba(51, 65, 85, 0.6) !important;
+      border-radius: 8px !important;
+      font-size: 11px !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    }
+    .leaflet-control-layers-base label {
+      color: #e2e8f0 !important;
+      cursor: pointer;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="panel">
+    <h3><div class="pulse-dot"></div> Telemetría GPS en Vivo</h3>
+    <div id="txtBadge" class="badge">CONECTANDO TELEMETRÍA 4G...</div>
+
+    <div class="stat">
+      <span class="stat-label">Camión / Dispositivo:</span>
+      <span id="txtPatente" class="stat-value">BRX-12 (LilyGO)</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Batería Li-Ion:</span>
+      <span id="txtBateria" class="stat-value">-- %</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Velocidad / GNSS:</span>
+      <span id="txtVelSat" class="stat-value">--</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Coordenadas:</span>
+      <span id="txtCoords" class="stat-value">-- , --</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Último reporte:</span>
+      <span id="txtHora" class="stat-value" style="color: #38bdf8;">--:--:--</span>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://raexkgrfehsgbbxybhlw.supabase.co/rest/v1/telemetria_flota?select=patente_camion,latitud,longitud,bateria_pct,bateria_v,velocidad_kmh,satelites,porcentaje_llenado_ia,timestamp&order=timestamp.desc&limit=50";
+    const API_KEY = "sb_publishable_waBqMs26qUy79s2d1gsL3A_tVRnAv0Q";
+
+    // Coordenadas base oficial (Planta Central Quilicura / Salida de Flota)
+    const BASE_LAT = -33.364320;
+    const BASE_LON = -70.741403;
+
+    const toFiniteNum = (val) => {
+      if (val === null || val === undefined || val === '') return null;
+      const n = Number(val);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const escHtml = (str) => String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+    // Capas cartográficas de alta disponibilidad y rendimiento
+    const layerGoogleCalles = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      attribution: '© Google Maps | BraxRecicla Flota'
+    });
+
+    const layerGoogleSatelite = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      attribution: '© Google Satelital Híbrido | BraxRecicla Flota'
+    });
+
+    const layerOSM = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap | BraxRecicla Flota'
+    });
+
+    // Iniciar con la capa de calles de Google
+    const map = L.map('map', {
+      zoomControl: false,
+      layers: [layerGoogleCalles]
+    }).setView([BASE_LAT, BASE_LON], 15);
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // Selector para alternar entre mapa urbano, satélite y OpenStreetMap
+    const baseLayers = {
+      "🗺️ Google Calles": layerGoogleCalles,
+      "🛰️ Satélite HD": layerGoogleSatelite,
+      "🌐 OpenStreetMap": layerOSM
+    };
+    L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
+
+    // Asegurar redibujado de tiles al cargar o redimensionar
+    window.addEventListener('load', () => {
+      setTimeout(() => map.invalidateSize(), 200);
+      setTimeout(() => map.invalidateSize(), 800);
+    });
+    window.addEventListener('resize', () => {
+      map.invalidateSize();
+    });
+
+    let truckMarker = null;
+    const routePolyline = L.polyline([], { color: '#10b981', weight: 4, opacity: 0.85 }).addTo(map);
+
+    const truckIcon = L.divIcon({
+      html: '<div style="font-size: 30px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));">🚚</div>',
+      className: 'truck-div-icon',
+      iconSize: [34, 34],
+      iconAnchor: [17, 17]
+    });
+
+    // Función principal para renderizar la telemetría del LilyGO T-A7670G
+    function procesarFilaTelemetria(ultimo, historico = []) {
+      if (!ultimo) return;
+
+      const rawLat = toFiniteNum(ultimo.latitud);
+      const rawLon = toFiniteNum(ultimo.longitud);
+      const patente = ultimo.patente_camion || 'BRX-12';
+
+      const batPct = toFiniteNum(ultimo.bateria_pct);
+      const batV = toFiniteNum(ultimo.bateria_v);
+      const vel = toFiniteNum(ultimo.velocidad_kmh);
+      const sats = toFiniteNum(ultimo.satelites);
+      const iaPct = toFiniteNum(ultimo.porcentaje_llenado_ia);
+
+      // Evaluar si las coordenadas son válidas o si está buscando satélites en interior (0,0)
+      const hasValidFix = rawLat !== null && rawLon !== null && (Math.abs(rawLat) > 0.001 || Math.abs(rawLon) > 0.001);
+      const targetLat = hasValidFix ? rawLat : BASE_LAT;
+      const targetLon = hasValidFix ? rawLon : BASE_LON;
+
+      let batTxt = '-- %';
+      if (batPct !== null) {
+        batTxt = batPct + '%' + (batV !== null ? ' (' + batV.toFixed(2) + ' V)' : '');
+      } else if (iaPct !== null) {
+        batTxt = iaPct + '% (IA)';
+      }
+
+      const velParts = [];
+      if (vel !== null) velParts.push(vel.toFixed(1) + ' km/h');
+      if (sats !== null) {
+        velParts.push(sats + ' sat.');
+      } else if (!hasValidFix) {
+        velParts.push('Buscando satélites...');
+      }
+      const velSatTxt = velParts.length > 0 ? velParts.join(' · ') : '--';
+
+      const badgeElem = document.getElementById('txtBadge');
+      if (hasValidFix) {
+        badgeElem.style.background = '#065f46';
+        badgeElem.style.color = '#34d399';
+        badgeElem.innerText = 'LILYGO 4G LTE EN VIVO';
+      } else {
+        badgeElem.style.background = '#78350f';
+        badgeElem.style.color = '#fde68a';
+        badgeElem.innerText = 'LILYGO 4G ACTIVO (BUSCANDO SATÉLITES)';
+      }
+
+      document.getElementById('txtPatente').innerText = patente;
+      document.getElementById('txtBateria').innerText = batTxt;
+      document.getElementById('txtVelSat').innerText = velSatTxt;
+      document.getElementById('txtCoords').innerText = hasValidFix
+        ? (targetLat.toFixed(5) + ', ' + targetLon.toFixed(5))
+        : 'Planta Base (-33.456, -70.648)';
+
+      if (ultimo.timestamp) {
+        const fecha = new Date(ultimo.timestamp);
+        document.getElementById('txtHora').innerText = fecha.toLocaleTimeString('es-CL');
+      }
+
+      const popupHtml =
+        '<b>Camión ' + escHtml(patente) + ' (LilyGO T-A7670G)</b><br>' +
+        (hasValidFix
+          ? '<span style="color:#10b981; font-weight:bold;">🟢 En Ruta y Transmitiendo 4G</span><br>'
+          : '<span style="color:#f59e0b; font-weight:bold;">⚡ 4G Conectado (Sin Fix GNSS Exterior)</span><br>') +
+        'Batería: ' + escHtml(batTxt) + '<br>' +
+        'GNSS: ' + escHtml(velSatTxt);
+
+      if (!truckMarker) {
+        truckMarker = L.marker([targetLat, targetLon], { icon: truckIcon }).addTo(map);
+        truckMarker.bindPopup(popupHtml);
+        map.setView([targetLat, targetLon], 15);
+      } else {
+        truckMarker.setLatLng([targetLat, targetLon]);
+        truckMarker.setPopupContent(popupHtml);
+      }
+
+      if (Array.isArray(historico) && historico.length > 0) {
+        const rutaCoords = historico
+          .filter((d) => {
+            const la = toFiniteNum(d.latitud);
+            const lo = toFiniteNum(d.longitud);
+            return la !== null && lo !== null && (Math.abs(la) > 0.001 || Math.abs(lo) > 0.001);
+          })
+          .slice()
+          .reverse()
+          .map((d) => [toFiniteNum(d.latitud), toFiniteNum(d.longitud)]);
+
+        if (rutaCoords.length > 0) {
+          routePolyline.setLatLngs(rutaCoords);
+        }
+      }
+    }
+
+    // Escuchar mensajes postMessage directos de la aplicación Next.js autenticada
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'RESIZE_MAP') {
+        map.invalidateSize();
+      }
+      if (event.data && event.data.type === 'TELEMETRIA_UPDATE' && event.data.payload) {
+        procesarFilaTelemetria(event.data.payload);
+      }
+    });
+
+    // Sondeo de respaldo directo a Supabase
+    async function actualizarMapa() {
+      try {
+        const res = await fetch(SUPABASE_URL, {
+          headers: {
+            'apikey': API_KEY,
+            'Authorization': 'Bearer ' + API_KEY
+          }
+        });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) return;
+
+        procesarFilaTelemetria(data[0], data);
+      } catch (err) {
+        console.warn("Sondeo REST pasivo:", err);
+      }
+    }
+
+    setInterval(actualizarMapa, 5000);
+    actualizarMapa();
+  </script>
+</body>
+</html>

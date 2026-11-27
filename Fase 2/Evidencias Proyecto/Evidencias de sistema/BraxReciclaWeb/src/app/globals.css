@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc; /* Slate 50 */
+  --foreground: #0f172a; /* Slate 900 */
+  
+  /* BraxRecicla Corporate Colors - Light Mode */
+  --color-brax-primary: #047857; /* Emerald 700 - Verde Ecológico Corporativo */
+  --color-brax-secondary: #10b981; /* Emerald 500 - Verde Neón/Cibernético */
+  --color-brax-accent: #059669; /* Emerald 600 */
+  --color-brax-dark: #0f172a; /* Slate 900 - Tono industrial oscuro */
+  --color-brax-light: #f1f5f9; /* Slate 100 - Gris muy claro para fondos de tarjetas */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Exportar colores a Tailwind (ej: bg-brax-primary, text-brax-secondary) */
+  --color-brax-primary: var(--color-brax-primary);
+  --color-brax-secondary: var(--color-brax-secondary);
+  --color-brax-accent: var(--color-brax-accent);
+  --color-brax-dark: var(--color-brax-dark);
+  --color-brax-light: var(--color-brax-light);
+  
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b0f19; /* Obsidian Black - Negro profundo premium */
+    --foreground: #f8fafc; /* Slate 50 - Texto claro alto contraste */
+    
+    /* BraxRecicla Corporate Colors - Dark Mode Ajustado */
+    --color-brax-primary: #10b981; /* Verde más brillante para resaltar en fondos oscuros */
+    --color-brax-secondary: #34d399; /* Verde cibernético claro */
+    --color-brax-accent: #059669; 
+    --color-brax-dark: #1e293b; /* Slate 800 - Para paneles y tarjetas elevadas */
+    --color-brax-light: #334155; /* Slate 700 */
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Google Maps Places Autocomplete Dark Theme */
+.pac-container {
+  background-color: #0f172a !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+  font-family: inherit !important;
+  margin-top: 6px !important;
+  z-index: 99999 !important;
+}
+
+.pac-item {
+  color: #cbd5e1 !important;
+  border-top: 1px solid #1e293b !important;
+  padding: 8px 14px !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+}
+
+.pac-item:hover, .pac-item-selected {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+}
+
+.pac-item-query {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.pac-matched {
+  color: #34d399 !important;
+}
+
+.pac-icon {
+  filter: invert(1) hue-rotate(100deg) !important;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 15s linear infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 35px rgba(16, 185, 129, 0.8));
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
